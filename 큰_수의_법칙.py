@@ -1,23 +1,15 @@
 n, m, k = map(int, input().split())
 arr = list(map(int, input().split()))[:n]
 
-arr.sort()
-first = arr[n - 1]
-second = arr[n - 2]
+arr.sort(reverse=True)
+first = arr[0]
+second = arr[1]
+
+count = int(m / (k+1)) * k # first가 등장하는 횟수
+count += m % (k+1) # 수가 정확하게 나누어 떨어지지 않았을 경우, 나머지를 더함
 
 result = 0
-
-while True:
-    # k만큼 first를 반복해서 더한 후, second를 한 번 더함
-    # 위 행위를 while문에서 반복
-    for i in range(k):
-        if m == 0:
-            break;
-    result += first
-    m -= 1
-    if m == 0:
-        break
-    result += second
-    m -= 1
+result += (count)* first
+result += (m-count) * second
 
 print(result)
