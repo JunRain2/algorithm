@@ -1,19 +1,16 @@
-a = input()
+input_data = input()
 
-x = int(ord(a[0])) - 97
-y = int(a[1]) - 1
+row = int(input_data[1])
+column = int(ord(input_data[0]) - int(ord('a'))) + 1 # 아스키 코드를 못외웠으면 그냥 이렇게 사용
 
-dx = [2, 2, -2, -2, 1, 1, -1, -1]
-dy = [1, -1, 1, -1, 2, -2, 2, -2]
+steps = [(-2, -1), (-1, -2), (1, -2), (2, -1), (2, 1), (1, 2), (-1, 2), (-2, 1)]
 
-cnt = 0
-for i in range(8):
-    tmp_x = x + dx[i]
-    tmp_y = y + dy[i]
+result = 0
+for step in steps:
+    next_row = row + step[0]
+    next_column = column + step[1]
     
-    if tmp_x < 0 or tmp_x >= 8 or tmp_y < 0 or tmp_y >= 8:
-        continue
-    
-    cnt += 1
+    if next_row >= 1 and next_row <= 8 and next_column >= 1 and next_column <= 8:
+        result += 1
 
-print(cnt)
+print(result)
