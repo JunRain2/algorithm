@@ -3,7 +3,7 @@ n, m = map(int, input().split())
 field = list()
 
 for _ in range(n):
-    field.append(list(map(int, input().split))[:m])
+    field.append(list(map(int, input()))[:m])
 
 
 # dfs로 특정한 노드를 방문한 뒤에 연결된 모든 노드들도 방문
