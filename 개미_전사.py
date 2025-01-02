@@ -4,14 +4,9 @@ array = list(map(int, input().split()))[:n]
 
 d = [0] * n
 
-for i, a in enumerate(array):
-    d[i] = max(d[i], a)
-    
-    if (i + 1) >= (len(array) - 1):
-        break
+d[0] = array[0]
+d[1] = max(array[0], array[1])
+for i in range(2, n):
+    d[i] = max(d[i - 1], d[i - 2] + array[i])
 
-    for j in range(i + 2, len(array)):
-        d[j] = max(d[j], array[j] + a)
-
-
-print(max(d))
+print(d[n - 1])
