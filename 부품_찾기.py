@@ -2,13 +2,14 @@ import sys
 
 n = int(input())
 n_array = list(map(int, sys.stdin.readline().rstrip().split()))[:n]
+n_array.sort() 
 
 m = int(input())
 m_array = list(map(int, sys.stdin.readline().rstrip().split()))[:m]
 
 
 def binary_search(array, target, start, end):
-    while start < end:
+    while start <= end:
         mid = (start + end) // 2
 
         if array[mid] == target:
