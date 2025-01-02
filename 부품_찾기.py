@@ -1,28 +1,18 @@
-import sys
-
+# N(가게의 부품 개수)을 입력받기
 n = int(input())
-n_array = list(map(int, sys.stdin.readline().rstrip().split()))[:n]
-n_array.sort() 
+array = [0] * 1000001
 
+# 가게에 있는 전체 부품 번호를 입력 받아서 기록
+for i in input().split():
+    array[i] = 1
+
+# M(손님이 확인 요청한 부품 개수)을 입력 받기
 m = int(input())
-m_array = list(map(int, sys.stdin.readline().rstrip().split()))[:m]
+# 손님이 확인 요청한 전체 부품 번호를 공백으로 구분하여 입력
+x = list(map(int, input()).split())
 
-
-def binary_search(array, target, start, end):
-    while start <= end:
-        mid = (start + end) // 2
-
-        if array[mid] == target:
-            return True
-        elif array[mid] > target:
-            end = mid - 1
-        else:
-            start = mid + 1
-
-    return False
-
-
-result = list()
-for i in m_array:
-    r = "yes" if binary_search(n_array, i, 0, len(n_array) - 1) else "no"
-    print(r, end=" ")
+# 손님이 확인 요청한 부품 번호를 하나씩 확인
+for i in x:
+    # 해당 부품이 존재하는지 확인
+    result = "yes" if array[i] == 1 else "no"
+    print(result, end=" ")
