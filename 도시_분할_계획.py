@@ -27,11 +27,13 @@ for _ in range(e):
     edges.append((cost, a, b))
     
 edges.sort()
+last = 0
 
 for edge in edges:
     cost, a, b = edge
     if find_parent(parent, a) != find_parent(parent, b):
         union_parent(parent, a, b)
+        last = cost
         result += cost
 
-print(result)
+print(result - last)
