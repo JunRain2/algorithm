@@ -1,27 +1,43 @@
+import heapq
+import sys
+
+input = sys.stdin.readline
 INF = int(1e9)
 
 n, m, c = map(int, input().split())
 
-graph = [[INF] * (n + 1) for _ in range(n + 1)]
-
-for i in range(1, n + 1):
-    graph[i][i] = 0
+graph = [[] for _ in range(n + 1)]
+distance = [INF] * (n + 1)
 
 for _ in range(m):
     a, b, j = map(int, input().split())
-    graph[a][b] = j
+    graph[a].append((b, j))
 
-for k in range(1, n + 1):
-    for a in range(1, n + 1):
-        for b in range(1, n + 1):
-            graph[a][b] = min(graph[a][b], graph[a][k] + graph[k][b])
 
-count = 0
-sum = list()
-for i in graph[c]:
-    if i == INF or i == 0:
+def dijkstra(start):
+    q = []
+    heapq.heappush(q, (0, start))
+    distance[start] = 0
+
+    while q:
+        dist, now = heapq.heappop(q)
+        if dist > distance[now]:
+            continue
+        for i in graph[now]:
+            cost = dist + i[1]
+            if cost < distance[i[0]]:
+                distance[i[0]] = cost
+                heapq.heappush(q, (cost, i[0]))
+
+
+dijkstra(c)
+
+cnt = 0
+max_distance = 0
+for i in distance:
+    if i == 0 or i == INF:
         continue
-    count += 1
-    sum.append(i)
+    cnt += 1
+    max_distance = max(max_distance, i)
 
-print(count, max(sum)) # 제일 오래 걸린 시간 기준 반환
+print(cnt, max_distance)
