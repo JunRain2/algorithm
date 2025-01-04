@@ -1,8 +1,12 @@
-data = list(map(int, input()))
+data = input()
 
-result = data[0]
+result = int(data[0])
 
-for i in data[1:]:
-    result = max(result * i, result + i)
-
-print(result)
+for i in range(1, len(data)):
+    num = int(data[i])
+    if num <= 1 or result <= 1:
+        result += num
+    else:
+        result *= num
+        
+print(num)
