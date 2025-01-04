@@ -1,43 +1,39 @@
 from collections import deque
+import copy
 
 
-n = int(input())
+v = int(input())
+indegree = [0] * (v + 1)
+graph = [[] for _ in range(v + 1)]
+time = [0] * (v + 1)
 
-graph = [[] for _ in range(n + 1)]
-times = [0] * (n + 1)
-result = [0] * (n + 1)
-indegree = [0] * (n + 1)
-
-for i in range(1, n + 1):
-    input_list = list(map(int, input().split()))
-    times[i] = input_list.pop(0)
-
-    for j in input_list:
-        if j == -1:
-            break
-        graph[j].append(i)
+for i in range(1, v + 1):
+    data = list(map(int, input().split()))
+    time[i] = data[0]
+    for x in data[1:-1]:  # 첫 요소와 마지막 요소를 제외
         indegree[i] += 1
+        graph[x].append(i)
 
 
 def topology_sort():
+    result = copy.deepcopy(time)
     q = deque()
 
-    for i in range(1, n + 1):
+    for i in range(1, v + 1):
         if indegree[i] == 0:
             q.append(i)
-            result[i] = times[i]
 
     while q:
         now = q.popleft()
         for i in graph[now]:
             indegree[i] -= 1
-            result[i] = max(result[i], times[i] + result[now])
-            
+            result[i] = max(result[i], time[i] + result[now])
+
             if indegree[i] == 0:
                 q.append(i)
 
+    for i in range(1, v + 1):
+        print(result[i])
+
 
 topology_sort()
-
-for i in range(1, n + 1):
-    print(result[i])
