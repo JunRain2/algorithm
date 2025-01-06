@@ -1,14 +1,16 @@
-n = list(map(ord, input()))
+data = input()
+result = []
+value = 0
 
-n.sort()
-
-result = ""
-sum = 0
-for i in range(len(n)):
-    if n[i] >= ord('A'):
-        result += chr(n[i])
+for x in data:
+    if x.isalpha():
+        result.append(x)
     else:
-        a = int(chr(n[i]))
-        sum += a
+        value += x
         
-print(result + str(sum))
+result.sort()
+
+if value != 0:
+    result.append(str(value))
+    
+print(''.join(result))
