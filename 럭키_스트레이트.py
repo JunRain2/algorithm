@@ -1,10 +1,14 @@
 n = input()
+length = input(n)
+summary = 0
 
-mid = int(len(n)/2)
-first = map(int, n[:mid])
-second = map(int, n[mid:])
+for i in range(length // 2):
+    summary += int(n[i])
+    
+for i in range(length // 2, length):
+    summary -= int(n[i])
 
-if sum(first) == sum(second):
+if summary == 0:
     print("LUCKY")
 else:
     print("READY")
