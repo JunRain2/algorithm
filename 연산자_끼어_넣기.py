@@ -3,7 +3,7 @@ numbers = list(map(int, input().split()))[:n]
 
 operation_cnt = list(map(int, input().split()))[:4]
 
-max_value = 0
+max_value = -int(1e9)
 min_value = int(1e9)
 
 
