@@ -1,39 +1,39 @@
 n = int(input())
-numbers = list(map(int, input().split()))[:n]
+# 연산을 수행하고자 하는 수 리스트
+data = list(map(int, input().split()))
+# 더하기, 빼기, 곱하기, 나누기 연산자 개수
+add, sub, mul, div = map(int, input().split())
 
-operation_cnt = list(map(int, input().split()))[:4]
-
-max_value = -int(1e9)
-min_value = int(1e9)
-
-
-def dfs(operation_cnt, index, value):
-    global max_value, min_value
-    if sum(operation_cnt) == 0:
-        max_value = max(max_value, value)
-        min_value = min(min_value, value)
-        return
-    for i in range(4):
-        if operation_cnt[i] == 0:
-            continue
-        else:
-            operation_cnt[i] -= 1
-            if i == 0:
-                tmp = value + numbers[index]
-            elif i == 1:
-                tmp = value - numbers[index]
-            elif i == 2:
-                tmp = value * numbers[index]
-            elif i == 3:
-                if value < 0:
-                    tmp = int(-((-value) / numbers[index]))
-                else:
-                    tmp = int(value / numbers[index])
-            dfs(operation_cnt, index + 1, tmp)
-            operation_cnt[i] += 1
+# 최솟값과 최댓값 초기화
+min_value = 1e9
+max_value = -1e9
 
 
-dfs(operation_cnt, 1, numbers[0])
+def dfs(i, now):
+    global min_value, max_value, add, sub, mul, div
+    # 모든 연산자를 다 사용한 경우, 최솟값과 최댓값 업데이트
+    if i == n:
+        min_value = min(min_value, now)
+        max_value = max(max_value, now)
+    else:
+        if add > 0:
+            add -= 1
+            dfs(i + 1, now + data[i])
+            add += 1
+        if sub > 0:
+            sub -= 1
+            dfs(i + 1, now - data[i])
+            sub += 1
+        if mul > 0:
+            mul -= 1
+            dfs(i + 1, now * data[i])
+        if div > 0:
+            div -= 1
+            dfs(i + 1, int(now / data[i]))
+            div += 1
+
+
+dfs(1, data[0])
 
 print(max_value)
 print(min_value)
