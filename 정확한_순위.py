@@ -19,22 +19,13 @@ for k in range(1, n + 1):
         for b in range(1, n + 1):
             graph[a][b] = min(graph[a][b], graph[a][k] + graph[k][b])
 
-visited = [[False] * (n + 1) for _ in range(n + 1)]
+result = 0
 for i in range(1, n + 1):
+    cnt = 0
     for j in range(1, n + 1):
-        if graph[i][j] == INF:
-            continue
-        else:
-            visited[i][j] = True
-            visited[j][i] = True
+        if graph[i][j] != INF or graph[j][i] != INF:
+            cnt += 1
+    if cnt == n:
+        result += 1
 
-result = []
-for i in range(1, n + 1):
-    flag = True
-    for j in range(1, n + 1):
-        if not visited[i][j]:
-            flag = False
-    if flag:
-        result.append(i)
-
-print(len(result))
+print(result)
