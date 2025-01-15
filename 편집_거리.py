@@ -1,24 +1,31 @@
-a = input()
-b = input()
+# 최소 편집 거리 계산을 위한 DP
+def edit_dist(str1, str2):
+    n = len(str1)
+    m = len(str2)
 
-len_a = len(a)
-len_b = len(b)
+    # 다이나믹 프로그래밍을 위한 2차원 DP 테이블 초기화
+    dp = [[0] * (m + 1) for _ in range(n + 1)]
 
-dp = [0] * 5000
-# 삽입할 경우, 삭제할 경우, 업데이트 할 경우 3가지 중에서 제일 작은 값
-result = int(1e9)
+    # DP 테이블 초기 설정
+    for i in range(1, n + 1):
+        dp[i][0] = i
+    for j in range(1, m + 1):
+        dp[0][j] = j
 
-a_i = 0
-b_i = 0
-while a_i == len_a:
-    if len_a > len_b: # 삽입
-        a_i += 1
-        b_i += 1
-        len_b += 1
-    elif len_a == len_b: # 업데이트
-        if a[a_i] == b[b_i]:
-        a_i += 1
-        b_i += 1
-    else : # 삭제
-        b_i += 1
-        len_b -= 1
+    # 최소 편집 거리 계싼
+    for i in range(1, n + 1):
+        for j in range(1, m + 1):
+            # 문자가 같다면, 왼쪽 위에 해당하는 수를 그대로 대입
+            if str1[i - 1] == str2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+            # 문자가 다르다면 3가지 경우 중에서 최솟값 찾기
+            else:  # 삽입(왼쪽), 삭제(위쪽), 교체(왼쪽 위) 중에서 최소 비용을 찾아 대입
+                dp[i][j] = 1 + min(dp[i][j - 1], dp[i - 1][j], dp[i - 1][j - 1])
+
+    return dp[n][m]
+
+
+str1 = input()
+str2 = input()
+
+print(edit_dist(str1, str2))
