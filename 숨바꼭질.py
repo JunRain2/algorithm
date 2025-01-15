@@ -11,6 +11,7 @@ distance = [INF] * (n + 1)
 for _ in range(m):
     a, b = map(int, input().split())
     graph[a].append((b, 1))
+    graph[b].append((a, 1))
 
 q = []
 distance[1] = 0
