@@ -34,7 +34,7 @@ for x in range(n):
             break
         dx = x + 2
         dy = y + 2
-        if 0 <= dx < n and 0 <= dy < m:
+        if 0 <= dx < n and 0 <= dy < m and a_array[x][y] != b_array[x][y]:
             reverse(x, y, a_array)
             result += 1
 
