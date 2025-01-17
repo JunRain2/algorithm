@@ -14,27 +14,23 @@ def union_parent(parent, a, b):
         parent[a] = b
 
 
-n = int(input())  # 대학의 수
+n = int(input())
 
 array = []
-
 max_day = 0
-for i in range(n):
-    p, d = map(int, input().split())  # 비용, ~일 안에
+for _ in range(n):
+    p, d = map(int, input().split())
     array.append((p, d))
     max_day = max(max_day, d)
 
-parent = [0] * (max_day + 1)
-for i in range(1, max_day + 1):
-    parent[i] = i
-
-array.sort(reverse=True)
+parent = [i for i in range(max_day + 1)]
+array.sort(key=lambda x: (-x[0], -x[1]))
 cost = 0
 
 for p, d in array:
     data = find_parent(parent, d)
     if data != 0:
         cost += p
-        union_parent(parent, d, d - 1)
+        union_parent(parent, data, data - 1)
 
 print(cost)
