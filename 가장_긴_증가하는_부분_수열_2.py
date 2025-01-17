@@ -1,19 +1,14 @@
+from bisect import bisect_left
+
 n = int(input())
+data = list(map(int, input().split()))
+array = [data[0]]
 
-array = list(map(int, input().split()))
-
-
-def max_permutations(array, index, cnt):
-    if index >= n - 1:
-        return cnt
-    if array[index] < array[index + 1]:
-        return max_permutations(array, index + 1, cnt + 1)
-    elif array[index] > array[index + 1]:
-        a = max_permutations(array, index + 1, cnt)
-        b = max_permutations(array, index + 1, 1)
-        return max(a, b)
+for i in range(1, n):
+    if data[i] > array[-1]:
+        array.append(data[i])
     else:
-        return max_permutations(array, index + 1, cnt)
+        index = bisect_left(array, data[i])
+        array[index] = data[i]
 
-
-print(max_permutations(array, 0, 1))
+print(len(array))
