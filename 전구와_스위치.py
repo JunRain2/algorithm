@@ -1,30 +1,37 @@
+def switch(data, i, n):
+    for j in range(i - 1, i + 2):
+        if 0 <= j < n:
+            data[j] = 1 - data[j]
+
+def try_solve(data, n):
+    result = 0
+    for i in range(1, n):
+        if data[i - 1] != array[i - 1]:
+            result += 1
+            switch(data, i, n)
+    return result if data == array else -1
+
 n = int(input())
+data = list(map(int, input()))
+array = list(map(int, input()))
 
-data = list(map(int, input()))  # 바꿀 배열
-array = list(map(int, input()))  # 같게 만들어야 하는 배열
+# 첫 번째 스위치를 누르지 않는 경우
+data1 = data[:]
+result1 = try_solve(data1, n)
 
+# 첫 번째 스위치를 누르는 경우
+data2 = data[:]
+switch(data2, 0, n)
+result2 = try_solve(data2, n)
 
-def switch(data, i):
-    if i == 0 or i == n - 2:
-        for j in range(i, i + 2):
-            data[j] = 0 if data[j] == 1 else 1
-    else:
-        for j in range(i, i + 3):
-            data[j] = 0 if data[j] == 1 else 1
-
-
-flag = False
-result = 0
-for i in range(n):
-    if data[i] != array[i]:
-        result += 1
-        switch(data, 1)
-
-    if data == array:
-        flag = True
-        break
-
-if flag:
-    print(result)
+# 최소값 결정
+if result1 != -1 and result2 != -1:
+    final_result = min(result1, result2 + 1)
+elif result1 != -1:
+    final_result = result1
+elif result2 != -1:
+    final_result = result2 + 1
 else:
-    print(-1)
+    final_result = -1
+
+print(final_result)
