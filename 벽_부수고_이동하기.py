@@ -1,46 +1,31 @@
 from collections import deque
 
+def bfs(n, m, array):
+    dx = [-1, 1, 0, 0]
+    dy = [0, 0, -1, 1]
+    visited = [[[0] * 2 for _ in range(m)] for _ in range(n)] # [x][y][wall] wall == 0이면 벽을 부수지 않고 도달한 거리 1이면 부수고 도달한 거리
+    queue = deque([(0, 0, 0)])
+    visited[0][0][0] = 1
 
-def bfs(array):
-    q = deque()
-    q.append((0, 0))
-    array[0][0] = 1  # 출발, 끝점을 포함
+    while queue:
+        x, y, wall = queue.popleft() # 좌표, 벽을 부수고 온건지 아닌지 여부
+        if x == n - 1 and y == m - 1:
+            return visited[x][y][wall]
 
-    while q:
-        x, y = q.popleft()
         for i in range(4):
-            nx = x + dx[i]
-            ny = y + dy[i]
-            if 0 <= nx < n and 0 <= ny < m and array[nx][ny] == 0:
-                q.append((nx, ny))
-                array[nx][ny] = array[x][y] + 1
+            nx, ny = x + dx[i], y + dy[i]
+            if 0 <= nx < n and 0 <= ny < m:
+                if array[nx][ny] == 0 and visited[nx][ny][wall] == 0: # 방문하지 않았던 경우
+                    visited[nx][ny][wall] = visited[x][y][wall] + 1
+                    queue.append((nx, ny, wall))
+                elif array[nx][ny] == 1 and wall == 0: # 벽을 방문한 경우
+                    visited[nx][ny][1] = visited[x][y][0] + 1
+                    queue.append((nx, ny, 1))
 
-    return array[n - 1][m - 1]
-
+    return -1
 
 n, m = map(int, input().split())
-array = []
-for _ in range(n):
-    array.append(list(map(int, input())))  # 0 이동 가능 / 1 이동 불가
+array = [list(map(int, input())) for _ in range(n)]
 
-
-dx = [-1, 0, 1, 0]
-dy = [0, -1, 0, 1]
-
-result = int(1e9)
-blocks = []
-for i in range(n):
-    for j in range(m):
-        if array[i][j] == 1:
-            array[i][j] = 0
-            tmp = bfs(array)
-            array[i][j] = 1
-            if tmp == 0:
-                continue
-            else:
-                result = min(result, tmp)
-
-if result == int(1e9):
-    print(-1)
-else:
-    print(result)
+result = bfs(n, m, array)
+print(result)
