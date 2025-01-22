@@ -45,6 +45,6 @@ while cnt == 1:  # 빙산이 하나라면 계속 반복
 
 
 if cnt == 0:
-    print(-1)
+    print(0)
 else:
     print(result)
