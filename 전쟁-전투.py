@@ -10,13 +10,13 @@ visited = [[False] * n for _ in range(m)]
 
 def dfs(x, y, color):
     visited[x][y] = True
-    max_cnt = 0
+    max_cnt = 1
     for i in range(4):
         nx = x + dx[i]
         ny = y + dy[i]
         if 0 <= nx < m and 0 <= ny < n and not visited[nx][ny] and array[nx][ny] == color:
-            max_cnt = max(max_cnt, dfs(nx, ny, color))
-    return max_cnt + 1
+            max_cnt += dfs(nx, ny, color)
+    return max_cnt 
 
 
 for x in range(m):
