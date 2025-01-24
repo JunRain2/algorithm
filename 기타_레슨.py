@@ -1,24 +1,25 @@
 n, m = map(int, input().split())
 array = list(map(int, input().split()))
 
-start = 1
+start = max(array)
 end = sum(array)
+result = end
 
-result = sum(array)
 while start <= end:
-    cnt = 1
-    mid = (start + end) // 2  # 최대값 찾기
+    mid = (start + end) // 2
     tmp = 0
-    for i in array:
-        tmp += i
-        if tmp > mid:
+    cnt = 1
+    for x in array:
+        if tmp + x > mid:
             cnt += 1
-            tmp = i
+            tmp = x
+        else:
+            tmp += x
 
-    if cnt > m:
-        start = mid + 1
-    else:
+    if cnt <= m:
+        result = mid
         end = mid - 1
-        result = min(result, mid)
+    else:
+        start = mid + 1
 
 print(result)
