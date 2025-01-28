@@ -1,37 +1,32 @@
 import sys
-import heapq
 
 input = sys.stdin.readline
 INF = int(1e9)
 
 n, m = map(int, input().split())
 
-graph = [[] for _ in range(n + 1)]
-distance = [INF] * (n + 1)
+graph = [[INF] * (n + 1) for _ in range(n + 1)]
+
+for i in range(1, n + 1):
+    graph[i][i] = 0
 
 for _ in range(m):
     a, b, c = map(int, input().split())
-    graph[a].append((b, c))
+    graph[a][b] = c
 
-q = []
-q.append((0, 1))
-distance[1] = 0
-
-while q:
-    dist, now = heapq.heappop(q)
-    if dist < 0:
+for k in range(1, n + 1):
+    for a in range(1, n + 1):
+        for b in range(1, n + 1):
+            graph[a][b] = min(graph[a][k] + graph[k][b], graph[a][b])
+            
+# 음의 사이클 검사
+for i in range(1, n + 1):
+    if graph[i][i] < 0:
         print(-1)
-        exit()
-    if dist > distance[now]:
-        continue
-    for b, c in graph[now]:
-        cost = dist + c
-        if cost < distance[b]:
-            distance[b] = cost
-            heapq.heappush(q, (cost, b))
+        sys.exit()
 
 for i in range(2, n + 1):
-    if distance[i] < INF:
-        print(distance[i])
+    if graph[1][i] < INF:
+        print(graph[1][i])
     else:
         print(-1)
