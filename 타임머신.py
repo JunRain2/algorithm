@@ -3,30 +3,34 @@ import sys
 input = sys.stdin.readline
 INF = int(1e9)
 
-n, m = map(int, input().split())
+def bellman_ford(start):
+    dist = [INF] * (N + 1)
+    dist[start] = 0
+    
+    for i in range(N):
+        for cur, next, cost in edges:
+            if dist[cur] != INF and dist[next] > dist[cur] + cost:
+                dist[next] = dist[cur] + cost
+                if i == N - 1:  # N번째 반복에서 갱신이 일어나면 음의 사이클 존재
+                    return True
+    
+    return dist
 
-graph = [[INF] * (n + 1) for _ in range(n + 1)]
+# 입력 처리
+N, M = map(int, input().split())
+edges = []
+for _ in range(M):
+    A, B, C = map(int, input().split())
+    edges.append((A, B, C))
 
-for i in range(1, n + 1):
-    graph[i][i] = 0
+# 벨만-포드 알고리즘 실행
+negative_cycle = bellman_ford(1)
 
-for _ in range(m):
-    a, b, c = map(int, input().split())
-    graph[a][b] = c
-
-for k in range(1, n + 1):
-    for a in range(1, n + 1):
-        for b in range(1, n + 1):
-            graph[a][b] = min(graph[a][k] + graph[k][b], graph[a][b])
-            
-# 음의 사이클 검사
-for i in range(1, n + 1):
-    if graph[i][i] < 0:
-        print(-1)
-        sys.exit()
-
-for i in range(2, n + 1):
-    if graph[1][i] < INF:
-        print(graph[1][i])
-    else:
-        print(-1)
+if negative_cycle == True:
+    print(-1)
+else:
+    for i in range(2, N + 1):
+        if negative_cycle[i] == INF:
+            print(-1)
+        else:
+            print(negative_cycle[i])
