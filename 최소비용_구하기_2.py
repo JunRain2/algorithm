@@ -35,7 +35,7 @@ while q:
 x = end
 result = []
 result.append(x)
-while x != 1:
+while x != start:
     x = parent[x]
     result.append(x)
     
