@@ -2,31 +2,36 @@ import heapq
 import sys
 
 input = sys.stdin.readline
+INF = int(1e18)  # 더 큰 값으로 INF 설정 -> "걸리는 시간 * 도로의 수"가 int(1e9)를 초과
 
-INF = int(1e9)
+n, m, k = map(int, input().split())
+graph = [[] for _ in range(n + 1)]
 
-n, m, k = map(int, input().split())  # 도시, 도로, 포장할 도로
-graph = [[] for _ in range(n)]
 for _ in range(m):
     a, b, c = map(int, input().split())
-    # 양방향
     graph[a].append((b, c))
     graph[b].append((a, c))
 
+distance = [[INF] * (k + 1) for _ in range(n + 1)]
+q = [(0, 1, 0)]  # (비용, 현재 도시, 포장한 도로 수)
+distance[1][0] = 0
 
-def dijkstra():
-    distance = [INF] * (n + 1)
-    q = [(0, 1)]
-    distance[1] = 0
+while q:
+    dist, now, paved = heapq.heappop(q)
 
-    while q:
-        dist, now = heapq.heappop(q)
-        if dist > distance[now]:
-            continue
-        for b, c in graph[now]:
-            cost = c + dist
-            if cost < distance[b]:
-                distance[b] = cost
-                heapq.heappush(q, (cost, b))
+    if dist > distance[now][paved]:
+        continue
 
-# 처음부터 K개의 경로를 0으로 처리?
+    for b, c in graph[now]:
+        # 도로를 포장하지 않는 경우
+        cost = dist + c
+        if cost < distance[b][paved]:
+            distance[b][paved] = cost
+            heapq.heappush(q, (cost, b, paved))
+
+        # 도로를 포장하는 경우
+        if paved < k and dist < distance[b][paved + 1]:
+            distance[b][paved + 1] = dist
+            heapq.heappush(q, (dist, b, paved + 1))
+
+print(min(distance[n]))
