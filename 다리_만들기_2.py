@@ -40,22 +40,25 @@ edges = []  # 섬의 다리를 저장하는 리스트
 # 현재 섬과 다른 섬의 길이를 구하는 과정
 for land in lands:
     for x, y in land:
-        current = graph[x][y]
         for i in range(4):
             nx = x
             ny = y
-            cnt = -1
+            cnt = 0
             while True:
                 nx += dx[i]
                 ny += dy[i]
-                cnt += 1
-                if nx < 0 or nx >= n or ny < 0 or ny >= m or graph[nx][ny] == current:
+                if nx < 0 or nx >= n or ny < 0 or ny >= m or graph[nx][ny] == graph[x][y]:
                     break
                 if graph[nx][ny] != 0 and cnt > 1:
-                    edges.append((cnt, current, graph[nx][ny]))
+                    edges.append((cnt, graph[x][y], graph[nx][ny]))
+                    break
+                elif graph[nx][ny] != 0:
+                    break
+                cnt += 1
 
 
-edges.sort() 
+edges = list(set(edges))
+edges.sort()
 parent = [i for i in range(len(lands) + 2)]
 
 
@@ -79,5 +82,11 @@ for cost, a, b in edges:
     if find_parent(parent, a) != find_parent(parent, b):
         union_parent(parent, a, b)
         result += cost
+
+# 모두 연결 안됐을 경우        
+for i in range(2, len(lands) + 2):
+    if find_parent(parent, i) != find_parent(parent, 2):
+        print(-1)
+        exit()
 
 print(result)
