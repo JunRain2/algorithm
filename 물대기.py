@@ -3,14 +3,16 @@ array = [int(input()) for _ in range(n)]
 edges = []
 for i in range(n):
     data = list(map(int, input().split()))
-    for j in range(len(data)):
+    for j in range(i + 1, n):
         if data[j] != 0:
             edges.append((data[j], i, j))
 
-edges = list(edges)
-edges.sort()
+# 직접 물대기 비용을 간선으로 추가
+for i in range(n):
+    edges.append((array[i], n, i))  # n을 가상의 노드로 사용
 
-parent = [i for i in range(n)]
+edges.sort()
+parent = list(range(n + 1))
 
 
 # 모든 거리 + 제일 작은 비용
@@ -34,13 +36,5 @@ for cost, a, b in edges:
     if find_parent(parent, a) != find_parent(parent, b):
         union_parent(parent, a, b)
         result += cost
-
-group = [[] for _ in range(n)]
-for i in range(n):
-    group[parent[i]].append(array[i])
-
-for i in range(n):
-    if group[i]:
-        result += min(group[i])
 
 print(result)
