@@ -9,9 +9,9 @@ for i in range(1, n + 1):
 
 for _ in range(m):
     a, b, c = map(int, input().split())
-    graph[a][b] = c
+    graph[a][b] = min(graph[a][b], c)
 
-path = [[list()] * (n + 1) for _ in range(n + 1)]
+path = [[[] for _ in range(n + 1)] for _ in range(n + 1)] # 2차원 배열의 초기화
 for k in range(1, n + 1):
     for a in range(1, n + 1):
         for b in range(1, n + 1):
