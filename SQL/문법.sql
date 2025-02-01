@@ -177,4 +177,21 @@ SELECT *
 FROM student
 RIGHT JOIN belonging ON belonging.student_id = student.student_id;
 
-# 연산자와 자료형
+# ROUND()
+SELECT
+    ROUND(723.58123, -1), # 720
+    ROUND(723.58123, 0), # 724
+    ROUND(723.58123, 1); # 723.6
+
+# CASE를 활용하여 필드 추가
+SELECT name,
+    (
+        CASE
+            WHEN age < 30 THEN 'young'
+            ELSE 'old'
+        END
+        ) AS age
+FROM student;
+
+# IF 문
+SELECT name, IF(age < 30, 'young', 'old') AS age FROM student;
