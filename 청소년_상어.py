@@ -1,16 +1,18 @@
+import copy
+
+result = 0
+
 dx = [-1, -1, 0, 1, 1, 1, 0, -1]
 dy = [0, -1, -1, -1, 0, 1, 1, 1]
 
-graph = []  # 상어를 17로 둠
+graph = [[None] * 4 for _ in range(4)]
 for i in range(4):
     data = list(map(int, input().split()))
-    input_data = []
-    for j in range(0, 8, 2):
-        input_data.append((data[j], data[j + 1] - 1))
-    graph.append(input_data)
+    for j in range(4):
+        graph[i][j] = [data[j * 2], data[(j * 2) + 1] - 1]
 
 
-def search_fish(num):
+def search_fish(graph, num):
     for i in range(4):
         for j in range(4):
             if graph[i][j][0] == num:
@@ -18,53 +20,55 @@ def search_fish(num):
     return None
 
 
-def swap_fish():
+def swap_fish(graph, x, y):
     for i in range(1, 17):
-        fish = search_fish(i)
-        if fish == None:
-            continue
-        # 전진 할 곳이 없거나, 상어가 있으면 반시계 방향으로 돌림
-        nx = ny = -1
-        while True:
-            direct = graph[fish[0]][fish[1]][1]
-            nx, ny = (
-                fish[0] + dx[direct],
-                fish[1] + dy[direct],
-            )
-            if 0 <= nx < 4 and 0 <= ny < 4 and graph[nx][ny][0] != 17:
-                break
-            graph[fish[0]][fish[1]] = (graph[fish[0]][fish[1]][0],(direct + 1) % 8)
-        graph[fish[0]][fish[1]], graph[nx][ny] = graph[nx][ny], graph[fish[0]][fish[1]]
+        fish = search_fish(graph, i)
+        if fish != None:
+            fx, fy = fish
+            direction = graph[fx][fy][1]
+            for _ in range(8):
+                nx = fx + dx[direction]
+                ny = fy + dy[direction]
+                if 0 <= nx < 4 and 0 <= ny < 4:
+                    if not (nx == x and ny == y):
+                        graph[fx][fy][1] = direction
+                        graph[fx][fy], graph[nx][ny] = (
+                            graph[nx][ny],
+                            graph[fx][fy],
+                        )
+                        break
+                direction = (direction + 1) % 8
 
 
-def forward_shark(result):
-    shark = search_fish(17)
-    direct = graph[shark[0]][shark[1]][1]
-    nx, ny = shark[0], shark[1]
+def forward_shark(graph, x, y):
+    direction = graph[x][y][1]
     tmp = []
-    for _ in range(3):
-        nx += dx[direct]
-        ny += dy[direct]
-        if nx < 0 or nx >= 4 or ny < 0 or ny >= 4 or graph[nx][ny] == -1:
-            continue
-        tmp.append((graph[nx][ny][0], nx, ny))
-
-    if len(tmp) == 0:
-        print(result)
-        exit()
-    tmp.sort()
-    cost, nx, ny = tmp[-1]
-
-    graph[shark[0]][shark[1]] = (-1, -1)
-    graph[nx][ny] = (17, graph[nx][ny][1])
-
-    return cost
+    for _ in range(4):
+        x += dx[direction]
+        y += dy[direction]
+        if 0 <= x < 4 and 0 <= y < 4:
+            if graph[x][y][0] != -1:
+                tmp.append((x, y))
+    return tmp
 
 
-result = graph[0][0][0]
-graph[0][0] = (17, graph[0][0][1])
-for _ in range(16):
-    swap_fish()
-    result += forward_shark(result)
+def dfs(array, x, y, total):
+    global result
+    array = copy.deepcopy(array)
 
+    total += array[x][y][0]
+    array[x][y][0] = -1
+
+    swap_fish(array, x, y)
+    positions = forward_shark(array, x, y)
+    
+    if len(positions) == 0:
+        result = max(result, total)
+        return
+
+    for nx, ny in positions:
+        dfs(array, nx, ny, total)
+
+
+dfs(graph, 0, 0, 0)
 print(result)
