@@ -36,7 +36,9 @@ INSERT INTO employee
         (4, '이순신', 24, '남성', '서울'),
         (5, '임꺽정', 45, '남성', '인천'),
         (6, '임민정', 33, '여성', '인천'),
-        (7, '김성민', 37, '남성', '경기');
+        (7, '김성민', 37, '남성', '경기'),
+        (8, '박지은', 33, '여성', '서울'),
+        (9, '이선희', 32, '여성', '경기');
 
 INSERT INTO company
     VALUES
@@ -48,18 +50,20 @@ INSERT INTO company
 
 INSERT INTO affiliation
     VALUES
-        (1, 1, 1, 3000, '2012-05-09'),
-        (2, 1, 1, 3000, '2012-05-09'),
-        (3, 1, 1, 3000, '2012-05-09'),
-        (4, 2, 1, 3000, '2012-05-09'),
-        (5, 2, 1, 3000, '2012-05-09'),
-        (6, 3, 1, 3000, '2012-05-09'),
-        (7, 4, 1, 3000, '2012-05-09'),
-        (8, 4, 1, 3000, '2012-05-09'),
-        (9, 5, 1, 3000, '2012-05-09');
+        (1,  1, 1,3000, '2012-05-09'),
+        (2,  2, 1,3000, '2012-05-09'),
+        (3,  3, 1,3000, '2012-05-09'),
+        (4,  4, 2,3000, '2012-05-09'),
+        (5,  5, 2,3000, '2012-05-09'),
+        (6,  6, 3,3000, '2012-05-09'),
+        (7,  7, 4,3000, '2012-05-09'),
+        (8,  8, 4,3000, '2012-05-09'),
+        (9,  9, 5,3000, '2012-05-09');
 
 # 문제 3
-SELECT e.name AS name, e.address AS address
-    FROM employee AS e, affiliation AS a, company AS c
-    WHERE e.employee_id = a.employee_id AND a.company_id = c.company_id AND c.name = '천국테크'
-    ORDER BY e.name ASC;
+SELECT DISTINCT e.name AS name, e.address AS address
+    FROM employee AS e, company AS c, affiliation as a
+    WHERE e.employee_id = a.employee_id
+        AND c.company_id = a.company_id
+        AND c.name = '천국테크'
+    ORDER BY e.name;
