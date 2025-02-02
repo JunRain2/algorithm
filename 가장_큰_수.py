@@ -1,7 +1,7 @@
 def solution(numbers):
-    answer = ''
-    
     numbers = list(map(str, numbers))
-    numbers.sort(reverse=True)
     
-    return answer.join(numbers)
+    numbers.sort(key=lambda x: x*3, reverse=True)
+    numbers = int(''.join(numbers))
+    
+    return ''.join(str(numbers))
