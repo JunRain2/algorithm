@@ -98,15 +98,14 @@ SELECT e.name, c.company_id, a.pay
     ORDER BY e.name;
 
 # 문제 7
-SELECT DISTINCT e.name, c.name, a.pay
-    FROM  employee AS e, company AS c, affiliation AS a,
-          (
-          SELECT pay
-            FROM company AS pc, affiliation AS ac
-            WHERE pc.company_id = ac.company_id
-                AND pc.name = 'K디자인'
-          ) AS tmp
+SELECT e.name, c.name, a.pay
+    FROM  employee AS e, company AS c, affiliation AS a
     WHERE e.employee_id = a.employee_id
         AND a.company_id = c.company_id
-        AND a.pay > tmp.pay
+        AND a.pay > ANY(
+            SELECT tmp2.pay
+                FROM company AS tmp1, affiliation AS tmp2
+                WHERE tmp1.company_id = tmp2.company_id
+                    AND tmp1.name = 'K디자인'
+    )
     ORDER BY a.pay;
