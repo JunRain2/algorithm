@@ -96,3 +96,17 @@ SELECT e.name, c.company_id, a.pay
         AND a.company_id = c.company_id
         AND a.pay > c.avg_pay
     ORDER BY e.name;
+
+# 문제 7
+SELECT DISTINCT e.name, c.name, a.pay
+    FROM  employee AS e, company AS c, affiliation AS a,
+          (
+          SELECT pay
+            FROM company AS pc, affiliation AS ac
+            WHERE pc.company_id = ac.company_id
+                AND pc.name = 'K디자인'
+          ) AS tmp
+    WHERE e.employee_id = a.employee_id
+        AND a.company_id = c.company_id
+        AND a.pay > tmp.pay
+    ORDER BY a.pay;
