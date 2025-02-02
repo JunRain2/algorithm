@@ -83,3 +83,12 @@ SELECT c.name, COUNT(e.employee_id), AVG(a.pay)
         AND e.employee_id = a.employee_id
     GROUP BY c.name
     ORDER BY c.name;
+
+# 문제 6
+SELECT e.name, c.company_id, a.pay
+    FROM employee AS e, company AS c, affiliation AS a
+    WHERE e.employee_id = a.employee_id
+        AND a.company_id = c.company_id
+    GROUP BY c.company_id
+        HAVING AVG(a.pay) < a.pay
+    ORDER BY e.name;
