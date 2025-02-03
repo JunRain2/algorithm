@@ -109,17 +109,77 @@ SELECT MONTH(datetime), COUNT(*)
 FROM registered_member
 WHERE datetime BETWEEN '2012-07-01' AND '2012-09-30'
 GROUP BY MONTH(datetime)
-ORDER BY MONTH(datetime); # ORDER BY의 기준은 SELECT에 의해 선택된 칼럼 중 하나여야 함
+ORDER BY MONTH(datetime);
+# ORDER BY의 기준은 SELECT 의해 선택된 칼럼 중 하나여야 함
 
 # 14번
 SELECT MONTH(datetime), COUNT(*)
 FROM registered_member
 WHERE datetime BETWEEN '2012-01-01' AND '2012-08-31'
 GROUP BY MONTH(datetime)
-ORDER BY MONTH(datetime);
+ORDER BY MONTH(datetime); # 틀린 풀이
 
 SET @month = 0;
-SELECT (@month := @month + 1) AS month,
-    (SELECT COUNT(id) FROM registered_member WHERE MONTH(datetime) = @month) AS count
+SELECT (@month := @month + 1)                                                   AS month,
+       (SELECT COUNT(id) FROM registered_member WHERE MONTH(datetime) = @month) AS count
 FROM registered_member
-WHERE @month < 8
+WHERE @month < 8;
+
+# 15번
+SELECT id
+FROM registered_member
+WHERE address IS NULL
+ORDER BY id;
+
+# 16번
+SELECT id
+FROM registered_member
+WHERE address IS NOT NULL
+ORDER BY id;
+
+# 17번
+SELECT name, IF(address IS NULL, '지역 정보 없음', address) AS address, grade # 3항 문항 형식의 IF 문
+FROM registered_member
+ORDER BY name;
+
+# 18번
+SELECT name, address, gender, datetime
+FROM registered_member
+WHERE address = '경기'
+ORDER BY name;
+
+# 19번
+SELECT name, IF(age < 30, "young", "old") AS age
+FROM registered_member
+ORDER BY name;
+
+SELECT name,
+       (
+           CASE
+               WHEN age < 30 THEN 'young'
+               ELSE 'old'
+               END
+           ) AS age
+FROM registered_member
+ORDER BY name;
+
+# 20번
+SELECT r.id, r.name
+FROM registered_member AS r,
+     retired_member AS tmp
+WHERE r.id = tmp.id
+  AND r.datetime > tmp.datetime
+ORDER BY r.name;
+
+# 21번
+SELECT rt.id, rt.name
+FROM retired_member AS rt
+WHERE rt.name NOT IN (SELECT name FROM registered_member)
+ORDER BY rt.name;
+
+SELECT rt.id, rt.name
+FROM retired_member AS rt LEFT JOIN registered_member AS rg ON rt.id = rg.id
+WHERE rg.id IS NULL
+ORDER BY rt.id;
+
+# 22번
