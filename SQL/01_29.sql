@@ -178,8 +178,81 @@ WHERE rt.name NOT IN (SELECT name FROM registered_member)
 ORDER BY rt.name;
 
 SELECT rt.id, rt.name
-FROM retired_member AS rt LEFT JOIN registered_member AS rg ON rt.id = rg.id
+FROM retired_member AS rt
+         LEFT JOIN registered_member AS rg ON rt.id = rg.id
 WHERE rg.id IS NULL
 ORDER BY rt.id;
 
 # 22번
+SELECT rg.name, rg.age, rg.datetime
+FROM registered_member AS rg
+         LEFT JOIN retired_member AS rt ON rg.id = rt.id
+WHERE rt.id IS NULL
+ORDER BY rg.datetime
+LIMIT 2;
+
+# 23번
+SELECT rt.name, rt.datetime, rt.grade
+FROM registered_member AS rg,
+     retired_member AS rt
+where rg.id = rt.id
+  AND rg.grade > rt.grade
+ORDER BY rt.name;
+
+# 24번
+SELECT gender, AVG(age), AVG(grade)
+FROM registered_member
+GROUP BY gender
+ORDER BY AVG(grade);
+
+# 25번
+SELECT name, grade, age, datetime
+FROM registered_member AS rg
+WHERE rg.name LIKE '_동빈%'
+   OR rg.name LIKE '_길동%'
+   OR rg.name LIKE '_민정%'
+   OR rg.name LIKE '_성민%'
+ORDER BY datetime;
+
+# 26번
+SELECT name, grade, age, datetime
+FROM registered_member
+WHERE name = '홍길동'
+   OR name = '이순신'
+   OR name = '김성민'
+ORDER BY datetime;
+
+SELECT name, grade, age, datetime
+FROM registered_member
+WHERE name IN ('홍길동', '이순신', '김성민')
+ORDER BY datetime;
+
+# 27번
+SELECT name, grade, age, datetime
+FROM retired_member
+WHERE name LIKE '%민%'
+  AND gender = '남성'
+ORDER BY datetime;
+
+# 28번
+SELECT tmp.name, tmp.grade
+FROM (SELECT rg.name, rg.grade, (rt.datetime - rg.datetime) AS datetime
+      FROM registered_member AS rg
+               LEFT JOIN retired_member AS rt ON rg.id = rt.id
+      WHERE rt.datetime IS NOT NULL
+      ORDER by datetime, rg.name) AS tmp
+ORDER BY name
+LIMIT 3;
+
+SELECT rg.name, rg.grade
+FROM registered_member AS rg
+         LEFT JOIN retired_member AS rt ON rg.id = rt.id
+ORDER BY (rt.datetime - rg.datetime) DESC,
+         name ASC
+LIMIT 3;
+
+# 29번
+SELECT name, DATE(datetime)
+FROM registered_member
+WHERE gender = "남성"
+ORDER BY datetime;
