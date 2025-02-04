@@ -1,14 +1,15 @@
-import heapq
-
 def solution(n, times):
-    answer = 0
-    waits = []
-    for time in times:
-        heapq.heappush(waits, (time, time))
+    start = 1
+    end = max(times) * n
     
-    for _ in range(n - 1):
-        wait, time = heapq.heappop(waits)
-        heapq.heappush(waits, (wait + time, time))
+    while start <= end:
+        mid = (start + end) // 2
+        people = sum(mid // time for time in times)
+        
+        if people >= n:
+            answer = mid
+            end = mid - 1
+        else:
+            start = mid + 1
     
-    answer, tmp = heapq.heappop(waits)
     return answer
