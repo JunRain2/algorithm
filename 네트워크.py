@@ -1,30 +1,30 @@
-def find_parent(parent, x):
-    if parent[x] != x:
-        parent[x] = find_parent(parent, parent[x])
-    return parent[x]
+from collections import deque
 
-
-def union_parent(parent, a, b):
-    a = find_parent(parent, a)
-    b = find_parent(parent, b)
-    if a < b:
-        parent[b] = a
-    else:
-        parent[a] = b
-
+def bfs(start, visited, graph):
+    q = deque([start])
+    visited[start] = True
+    
+    while q:
+        v = q.popleft()
+        for i in graph[v]:
+            if not visited[i]:
+                visited[i] = True
+                q.append(i)
 
 def solution(n, computers):
     answer = 0
-
-    parent = list(range(n))
-
+    visited = [False] * n
+    graph = [[] for _ in range(n)]
+    
     for i in range(n):
-        for j in range(n):
-            if computers[i][j] == 1 and find_parent(parent, i) != find_parent(
-                parent, j
-            ):
-                union_parent(parent, i, j)
-
-    answer = len(set(parent))
-
+        for j in range(i + 1, n):
+            if computers[i][j] == 1:
+                graph[i].append(j)
+                graph[j].append(i)
+                
+    
+    for i in range(n):
+        if not visited[i]:
+            answer += 1     
+            bfs(i, visited, graph)
     return answer
