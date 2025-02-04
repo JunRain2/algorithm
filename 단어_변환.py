@@ -1,5 +1,8 @@
 from collections import deque
 
+def can_transform(word1, word2):
+    return sum(c1 != c2 for c1, c2 in zip(word1, word2)) == 1
+
 def solution(begin, target, words):
     n = len(words)
     words.append(begin)
@@ -10,8 +13,7 @@ def solution(begin, target, words):
     while q:
         current = q.popleft()
         for i in range(n):
-            t = set(list(words[i])) & set(list(words[current]))
-            if len(t) == len(words[current]) - 1 and visited[i] == -1:
+            if can_transform(words[current], words[i]) and visited[i] == -1:
                 q.append(i)
                 visited[i] = visited[current] + 1
                 if words[i] == target:
