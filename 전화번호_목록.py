@@ -1,6 +1,7 @@
 def solution(phone_book):
-    phone_book.sort()
-    for p1, p2 in zip(phone_book, phone_book[1:]):
-        if p2.startswith(p1):
-            return False
+    num_set = set(phone_book)
+    for num in phone_book:
+        for i in range(1, len(num)):
+            if num[:i] in num_set:
+                return False
     return True
