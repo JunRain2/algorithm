@@ -1,10 +1,10 @@
-from itertools import combinations
-
 def solution(number, k):
-    numbers = list(number)
-    comb = combinations(number, len(number) - k)
+    answer = [] # Stack
     
-    nums = [int("".join(x)) for x in comb] 
-    
-    answer = str(max(nums))
-    return answer
+    for num in number:
+        while k > 0 and answer and answer[-1] < num:
+            answer.pop()
+            k -= 1
+        answer.append(num)
+        
+    return ''.join(answer[:len(answer) - k])
