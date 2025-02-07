@@ -1,19 +1,11 @@
-# 전체 학생의 수, 도난 당한 학생들의 번호, 여벌의 체육복을 가져온 학생
 def solution(n, lost, reserve):
-    n -= len(lost)
-    tmp = set(lost) & set(reserve)
-
-    for t in tmp:
-        reserve.remove(t)
-        lost.remove(t)
-        n += 1
-
-    for l in lost:
-        if l - 1 in reserve:
-            reserve.remove(l - 1)
-            n += 1
-        elif l + 1 in reserve:
-            reserve.remove(l + 1)
-            n += 1
-            
-    return n
+    set_reserve = set(reserve) - set(lost)
+    set_lost = set(lost) - set(reserve)
+    
+    for r in set_reserve:
+        if r - 1 in set_lost:
+            set_lost.remove(r - 1)
+        elif r + 1 in set_lost:
+            set_lost.remove(r + 1)
+    
+    return n - len(set_lost)
