@@ -1,44 +1,25 @@
-from collections import deque
-
-dx = [1, 0]
-dy = [0, 1]
-
-def dfs(short_value, graph, x, y, n, m, distance):
-    if x == (n - 1) and y == (m - 1):
-        if distance == short_value:
-            return 1
-        else:
-            return 0
-    if x < 0 or x >= n or y < 0 or y >= m or graph[x][y] == 1 or distance > short_value:
-        return 0
-    
-    cnt = 0
-    for i in range(2):
-        nx = x + dx[i]
-        ny = y + dy[i]
-        cnt += dfs(short_value, graph, nx, ny, n, m, distance + 1)
-        
-    return cnt
-
 def solution(m, n, puddles):
-    answer = 0
+    mod = 1000000007
+    # dp는 n행 m열의 2차원 배열 (행: 세로, 열: 가로)
+    dp = [[0] * m for _ in range(n)]
     
-    graph = [[0] * m for i in range(n)]
-    distance = [[-1] * m for i in range(n)]
+    # puddles 리스트는 (x, y) 형식으로 들어오므로, 
+    # 이를 (y-1, x-1)로 바꿔서 dp에서 장애물 위치로 사용한다.
+    puddle_set = {(y - 1, x - 1) for x, y in puddles}
     
-    for x, y in puddles:
-        graph[x -1][y - 1] = 1
-    
-    q = deque([(0, 0)])
-    distance[0][0] = 0
-    while q:
-        x, y = q.popleft()
-        
-        for i in range(2):
-            nx = x + dx[i]
-            ny = y + dy[i]
-            if 0 <= nx < n and 0 <= ny < m and distance[nx][ny] == -1 and graph[nx][ny] != 1:
-                distance[nx][ny] = distance[x][y] + 1
-                q.append((nx, ny))
-    
-    return dfs(distance[n - 1][m - 1], graph, 0, 0, n, m, 0) % 1000000007
+    dp[0][0] = 1  # 출발점은 무조건 1
+
+    for i in range(n):
+        for j in range(m):
+            # 만약 이 좌표가 웅덩이라면 경로 수는 0
+            if (i, j) in puddle_set:
+                dp[i][j] = 0
+                continue
+            # 시작점이 아닐 경우, 위쪽과 왼쪽에서 오는 경로의 수를 더함
+            if i > 0:
+                dp[i][j] += dp[i - 1][j]
+            if j > 0:
+                dp[i][j] += dp[i][j - 1]
+            dp[i][j] %= mod
+
+    return dp[n - 1][m - 1]
