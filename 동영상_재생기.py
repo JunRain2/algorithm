@@ -3,17 +3,9 @@ def trans_seconds(time):
     return int(time[0]) * 60 + int(time[1])
 
 def trans_date(time):
-    minute = str(time // 60)
-    second = str(time % 60)
-    
-    if len(minute) == 1:
-        minute = "0" + minute
-    if len(second) == 1:
-        second = "0" + second
-        
-    time = minute + ":" + second
-    
-    return "".join(time)
+    minute = str(time // 60).zfill(2)
+    second = str(time % 60).zfill(2)
+    return minute + ":" + second
         
 
 def check_op(current, op_start, op_end):
