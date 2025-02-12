@@ -1,23 +1,37 @@
+import heapq
+
 INF = int(1e9)
 
+def dijkstra(start, graph, n):
+    distance = [INF] * (n + 1)
+    distance[start] = 0
+    q = [(0, start)]
+    
+    while q:
+        dist, now = heapq.heappop(q)
+        if distance[now] < dist:
+            continue
+        for b, c in graph[now]:
+            cost = dist + c
+            if distance[b] > cost:
+                distance[b] = cost
+                heapq.heappush(q, (cost, b))
+                
+    return distance
+                
+# 지점의 개수, 출발지, A의 도착지, B의 도착지, 
 def solution(n, s, a, b, fares):
-    answer = 0
+    graph = [[] for _ in range(n + 1)]
     
-    graph = [[INF] * (n + 1) for _ in range(n + 1)]
-    for i in range(n + 1):
-        graph[i][i] = 0
-        
     for x, y, c in fares:
-        graph[x][y] = c
-        graph[y][x] = c
+        graph[x].append((y, c))
+        graph[y].append((x, c))
         
-    for k in range(1, n + 1):
-        for x in range(1, n + 1):
-            for y in range(1, n + 1):
-                graph[x][y] = min(graph[x][y], graph[x][k] + graph[k][y])
+    distance = dijkstra(s, graph, n)
+    answer = distance[a] + distance[b]
     
-    answer = graph[s][a] + graph[s][b]
-    for i in range(1, n + 1):
-        answer = min(answer, graph[s][i] + graph[i][a] + graph[i][b])
+    for i in range(n + 1):
+        dist = dijkstra(i, graph, n)
+        answer = min(answer, distance[i] + dist[a] + dist[b])
     
     return answer
