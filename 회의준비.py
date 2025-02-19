@@ -18,7 +18,7 @@ parent = list(range(n + 1))
 distance = [[INF] * (n + 1) for _ in range(n + 1)]
 
 for i in range(1, n + 1):
-    distance[i][i] = 1
+    distance[i][i] = 0
 
 m = int(input())  # 서로 알고 있는 수 -> 간선
 
@@ -37,6 +37,9 @@ for k in range(1, n +1):
             
 for a, b in array:
     union_parent(parent, a, b)
+
+for i in range(1, n + 1):
+    find_parent(parent, i)
 
 d = dict()
 for i in range(1, n + 1):
