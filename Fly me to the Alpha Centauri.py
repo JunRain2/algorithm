@@ -1,22 +1,16 @@
-import sys
+t = int(input())
 
-sys.setrecursionlimit(10**5)
-
-for tc in range(int(input())):
+for _ in range(t):
     x, y = map(int, input().split())
-    n = y - x
+    
+    distance = y - x # y와 x사이의 거리
+    tmp = 0 # 이동 거리
+    cnt = 0 # 공간 장치 이동 횟수
+    moving = 0 # 반복 횟수
 
-    dx = [-1, 0, 1]
-
-    def dfs(v, k, cnt):
-        if v == n and k == 1:
-            return cnt
-        if k <= 0 or v > n + 1 or v < 1:
-            return int(2**31)
-
-        tmp = []
-        for i in range(3):
-            tmp.append(dfs(v + (k + dx[i]), k + dx[i], cnt + 1))
-        return min(tmp)
-
-    print(dfs(1, 1, 1))
+    while tmp < distance:
+        cnt += 1
+        if cnt % 2 != 0:
+            moving += 1
+        tmp += moving
+    print(cnt)
