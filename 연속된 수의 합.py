@@ -1,17 +1,5 @@
-from collections import deque
-
 def solution(num, total):
-    answer = deque()
-    
-    start = total
-    end = total - num
-    for i in range(start, end, -1):
-        answer.append(i)
-        
-        
-    while sum(answer) != total:
-        answer.popleft()
-        answer.append(end)
-        end -= 1
-        
-    return sorted(answer)
+    # (num*(num-1))//2는 0부터 num-1까지의 합입니다.
+    start = (total - (num * (num - 1) // 2)) // num
+    # start부터 시작하는 num개의 정수를 리스트로 반환합니다.
+    return list(range(start, start + num))
