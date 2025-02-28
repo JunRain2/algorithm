@@ -1,4 +1,5 @@
 import heapq
+INF = int(2147483648)
 
 n, m = map(int, input().split())
 
@@ -10,18 +11,18 @@ for i in range(n):
         data[b] = list()
     heapq.heappush(data[b], -a)
 
-k = sorted(data.keys())
 s = 0
-for i in range(len(k) - 1):
-    s -= heapq.heappop(data[k[i]]) # 현재 가격 중 제일 무거운 고기
-    if s >= m:
-        print(k[i])
-        exit()
-    s -= sum(data[k[i]]) # 남은 고기
+answer = INF
 
-s -= heapq.heappop(data[k[-1]])
-if s >= m:
-    print(k[-1])
-    exit()
+for i in sorted(data.keys()):
+    price = 0
+    while data[i]:
+        price += i
+        s -= heapq.heappop(data[i])
+        if s >= m:
+            answer = min(answer, price)
 
-print(-1)
+if answer == INF:
+    print(-1)
+else:
+    print(answer)
