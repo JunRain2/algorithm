@@ -1,28 +1,16 @@
-def find_parent(parent, x):
-    if parent[x] != x:
-        parent[x] = find_parent(parent, parent[x])
-    return parent[x]
-
-def union_parent(parent, a, b):
-    a = find_parent(parent, a)
-    b = find_parent(parent, b)
-    if a < b:
-        parent[b] = a
-    else:
-        parent[a] = b
-
 for tc in range(int(input())):
     n, m = map(int, input().split())
     data = [tuple(map(int, input().split())) for _ in range(m)]
-    parent = list(range(n + 1))
-    
+    data.sort(key=lambda x: (x[1], x[0]))  # 끝번호(b), 시작번호(a) 순으로 정렬
+
+    visited = [False] * (n + 1)  # 각 책 번호의 배정 여부를 기록
     answer = 0
+
     for a, b in data:
-        data = find_parent(parent, b)
-        if data >= a:
-            answer += 1
-            union_parent(parent, data, data -1)
-            for i in range(1, n + 1):
-                find_parent(parent, i)
-            
+        for book in range(a, b + 1):  # 학생이 원하는 범위 내에서
+            if not visited[book]:  # 아직 배정되지 않은 책이 있다면
+                visited[book] = True  # 해당 책을 배정
+                answer += 1
+                break
+
     print(answer)
