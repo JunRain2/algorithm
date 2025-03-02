@@ -1,38 +1,17 @@
-from collections import deque
-
-# 지을 수 있는 가장 큰 정사각형 목장의 한 변의 크기 L
-# 세로, 가로
 m, n = map(int, input().split())
 graph = [list(map(int, input().split())) for _ in range(m)]
 
-dx = [1, 1, 0]
-dy = [0, 1, 1]
-
-
-def bfs(x, y):
-    q = deque([(x, y)])
-    distance = [[-1] * n for _ in range(m)]
-    distance[x][y] = 1
-    while q:
-        x, y = q.popleft()
-        for i in range(3):
-            nx, ny = x + dx[i], y + dy[i]
-            if (
-                0 <= nx < m
-                and 0 <= ny < n
-                and graph[nx][ny] == 0
-            ):
-                if distance[nx][ny] == -1:
-                    q.append((nx, ny))
-                    distance[nx][ny] = distance[x][y] + 1
-            else:
-                return distance[x][y]
-
-
+# dp 배열을 (m+1) x (n+1) 크기로 만들어서 인덱스 에러를 방지합니다.
+dp = [[0] * (n + 1) for _ in range(m + 1)]
 result = 0
-visited = [[False] * n for _ in range(m)]
-for i in range(m):
-    for j in range(n):
-        if graph[i][j] == 0:
-            result = max(result, bfs(i, j))
+
+# 1부터 시작하는 이유는 dp 배열의 첫 행, 첫 열을 0으로 두고
+# graph의 인덱스와 dp를 맞추기 위함입니다.
+for i in range(1, m + 1):
+    for j in range(1, n + 1):
+        # graph의 인덱스는 0부터 시작하므로 i-1, j-1을 사용합니다.
+        if graph[i - 1][j - 1] == 0:
+            dp[i][j] = min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1]) + 1
+            result = max(result, dp[i][j])
+            
 print(result)
