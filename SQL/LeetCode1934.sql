@@ -1,7 +1,5 @@
-SELECT DISTINCT A.user_id AS user_id, IF(B.rate IS NULL, 0, B.rate) AS confirmation_rate
+SELECT DISTINCT A.user_id, ROUND(AVG(IF(B.action = 'confirmed', 1, 0)), 2) AS confirmation_rate
 FROM Signups AS A
-         LEFT JOIN
-     (SELECT user_id, ROUND(SUM(action LIKE 'confirmed') / COUNT(*), 2) AS rate
-      FROM Confirmations
-      GROUP BY user_id) AS B
-     ON A.user_id = B.user_id
+         LEFT JOIN Confirmations AS B
+                   ON A.user_id = B.user_id
+GROUP BY A.user_id;
