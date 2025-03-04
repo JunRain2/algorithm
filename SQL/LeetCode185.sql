@@ -1,7 +1,12 @@
-SELECT B.name AS Department, A.name AS Employee, A.salary AS Salary
-FROM Employee AS A JOIN Department AS B ON A.departmentId = B.id
-WHERE (A.departmentId, A.salary) IN (SELECT departmentId, salary
-                                     FROM Employee
-                                     WHERE A.departmentId = departmentId
-                                     ORDER BY salary DESC
-                                     LIMIT 3);
+WITH RankedSalaries AS (
+    SELECT
+        e.name AS Employee,
+        e.salary AS Salary,
+        d.name AS Department,
+        DENSE_RANK() OVER (PARTITION BY e.departmentId ORDER BY e.salary DESC) AS rnk
+    FROM Employee e
+             JOIN Department d ON e.departmentId = d.id
+)
+SELECT Department, Employee, Salary
+FROM RankedSalaries
+WHERE rnk <= 3;
