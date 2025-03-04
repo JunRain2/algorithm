@@ -1,21 +1,30 @@
-for tc in range(int(input())):
+import sys
+sys.setrecursionlimit(10**5)  # 재귀 깊이 제한 늘리기
+
+def dfs(x):
+    global result
+    visited[x] = True
+    cycle.append(x)
+    number = numbers[x]
+    
+    if visited[number]:
+        if number in cycle:
+            result += cycle[cycle.index(number):]
+        return
+    else:
+        dfs(number)
+
+t = int(input())
+
+for _ in range(t):
     n = int(input())
-    visited = [0] * n
-    graph = list(map(int, input().split()))
+    numbers = [0] + list(map(int, input().split()))
+    visited = [True] + [False] * n
+    result = []
     
-    def dfs(v, cnt):
-        if visited[v]:
-            if visited[v] == 1:
-                return cnt, graph[v] - 1
-            else:
-                return 0
-        visited[v] = 1
-        result = dfs(graph[v] - 1, cnt + 1)
-        visited[v] = 2
-        return result
-    
-    answer = n
-    for i in range(n):
+    for i in range(1, n+1):
         if not visited[i]:
-            answer -= dfs(i, 0)
-    print(answer)
+            cycle = []
+            dfs(i)
+    
+    print(n - len(result))
