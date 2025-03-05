@@ -1,18 +1,8 @@
-(SELECT A.id, A.visit_date, A.people
-FROM Stadium AS A
-    JOIN Stadium AS B ON A.id - 1 = B.id
-    JOIN Stadium AS C ON A.id + 1 = C.id
-WHERE A.people >= 100 AND B.people >= 100 AND C.people >= 100
-UNION
-SELECT A.id, A.visit_date, A.people
-FROM Stadium AS A
-    JOIN Stadium AS B ON A.id + 1 = B.id
-    JOIN Stadium AS C ON A.id + 2 = C.id
-WHERE A.people >= 100 AND B.people >= 100 AND C.people >= 100
-UNION
-SELECT A.id, A.visit_date, A.people
-FROM Stadium AS A
-    JOIN Stadium AS B ON A.id - 1 = B.id
-    JOIN Stadium AS C ON A.id - 2 = C.id
-WHERE A.people >= 100 AND B.people >= 100 AND C.people >= 100)
-ORDER BY visit_date
+SELECT visited_on, amount, ROUND(amount/7, 2) average_amount
+FROM (
+         SELECT DISTINCT visited_on,
+                         SUM(amount) OVER(ORDER BY visited_on RANGE BETWEEN INTERVAL 6 DAY PRECEDING AND CURRENT ROW) amount,
+                 MIN(visited_on) OVER() 1st_date
+         FROM Customer
+     ) t
+WHERE visited_on>= 1st_date+6;
