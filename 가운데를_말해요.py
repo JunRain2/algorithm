@@ -1,15 +1,24 @@
-from bisect import bisect_left
+from collections import heapq
 import sys
 input = sys.stdin.readline
 
 n = int(input())
 
-array = []
+min_h = []
+max_h = []
+
 for i in range(n):
-    mid = i // 2
     a = int(input())
-    if not array or array[-1] <= a:
-        array.append(a)
+    if len(min_h) == len(max_h):
+        heapq.heappush(max_h, -a)
     else:
-        array.insert(bisect_left(array, a), a)
-    print(array[mid])
+        heapq.heappush(min_h, a)
+        
+    if max_h and min_h and -1 * max_h[0] > min_h[0]:
+        max_value = -1 * heapq.heappop(max_h) * 1
+        min_value = heapq.heappop(min_h)
+        
+        heapq.heappush(max_h, -1 * min_value)
+        heapq.heappush(min_h, max_value)
+    
+    print(max_h[0] * -1)
