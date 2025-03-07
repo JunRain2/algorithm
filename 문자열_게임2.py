@@ -1,28 +1,23 @@
 from collections import defaultdict
 
-for _ in range(int(input())):
-    w = input()
+for tc in range(int(input())):
+    s = list(input())
     k = int(input())
     
-    if k > len(w):
-        print(-1)
-        continue
+    d = defaultdict(list)
+    for i, c in enumerate(s):
+        d[c].append(i)
     
-    char_positions = defaultdict(list)
-    for i, char in enumerate(w):
-        char_positions[char].append(i)
+    result1 = int(1e9)
+    result2 = -1
+    for i in d.keys():
+        if len(d[i]) < k:
+            continue
+        for j in range(len(d[i]) - k + 1):
+            result1 = min(result1, d[i][j + k - 1] - d[i][j] + 1)
+            result2 = max(result2, d[i][j + k - 1] - d[i][j] + 1)
     
-    min_len = float('inf')
-    max_len = -1
-    
-    for char, positions in char_positions.items():
-        if len(positions) >= k:
-            for i in range(len(positions) - k + 1):
-                length = positions[i+k-1] - positions[i] + 1
-                min_len = min(min_len, length)
-                max_len = max(max_len, length)
-    
-    if min_len == float('inf') or max_len == -1:
+    if result1 == int(1e9):
         print(-1)
     else:
-        print(min_len, max_len)
+        print(result1, result2)
