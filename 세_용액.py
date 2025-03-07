@@ -1,31 +1,21 @@
-n = int(input().strip())
-arr = list(map(int, input().split()))
-arr.sort()
+n = int(input())
+array = list(map(int, input().split()))
+array.sort()
 
-best_sum = int(4e9)
-answer = [0, 0, 0]
-
-for i in range(n - 2):
-    left = i + 1
+result = []
+value = int(1e11)
+for start in range(n):
+    left = start + 1
     right = n - 1
-    
     while left < right:
-        current_sum = arr[i] + arr[left] + arr[right]
-        
-        # 0에 가까운 합인지 업데이트
-        if abs(current_sum) < abs(best_sum):
-            best_sum = current_sum
-            answer = [arr[i], arr[left], arr[right]]
-            # 합이 정확히 0이면 더 이상 개선 불가하므로 바로 출력 후 종료
-            if best_sum == 0:
-                print(*sorted(answer))
-                exit()
-        
-        # 합이 음수면 왼쪽 포인터를 오른쪽으로 이동하여 값을 키운다.
-        if current_sum < 0:
+        tmp = [array[start], array[left], array[right]]
+        v = sum(tmp)
+        if abs(v) < value:
+            result = tmp
+            value = abs(v)
+        if v < 0:
             left += 1
-        # 합이 양수면 오른쪽 포인터를 왼쪽으로 이동하여 값을 줄인다.
         else:
             right -= 1
 
-print(*sorted(answer))
+print(*sorted(result))
