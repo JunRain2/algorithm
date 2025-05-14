@@ -1,21 +1,21 @@
-from collections import Counter
+from collections import defaultdict
 
-# 2종류의 과일만 남기면서 최댓값 구하기
 n = int(input())
 data = list(map(int, input().split()))
-left, right = 0, n - 1
 
-counter = Counter(data)
+count = defaultdict(int)
+left = 0
+max_len = 0
 
-while len(counter.keys()) > 2:
-    if (counter[data[right]] - 1) == 0:
-        counter[data[right]] -= 1
-        right -= 1
-    elif (counter[data[left]] - 1 ==0):
-        counter[data[left]] -= 1
+for right in range(n):
+    count[data[right]] += 1
+
+    while len(count) > 2:
+        count[data[left]] -= 1
+        if count[data[left]] == 0:
+            del count[data[left]]
         left += 1
-    
-    counter += Counter()
-    n -= 1
 
-print(n)
+    max_len = max(max_len, right - left + 1)
+
+print(max_len)
