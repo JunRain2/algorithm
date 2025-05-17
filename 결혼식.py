@@ -14,16 +14,15 @@ for _ in range(m):
 
 
 visited[1] = True
-q = deque([1])    
+q = deque([(1, 0)])    
 
 result = 0
 while q:
-    x = q.popleft()
+    x, depth = q.popleft()
     for i in graph[x]:
-        if not visited[i]:
+        if not visited[i] and depth < 2:
             visited[i] = True
-            if 1 in graph[i]:
-                q.append(i)
             result += 1
+            q.append((i, depth + 1))
 
 print(result)
