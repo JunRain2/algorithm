@@ -1,44 +1,39 @@
+import sys
+sys.setrecursionlimit(1000000)
+
 n, m = map(int, input().split())
-
 graph = [list(input()) for _ in range(n)]
+
 visited = [[False] * m for _ in range(n)]
-circle = [[False] * m for _ in range(n)]
+escape = [[False] * m for _ in range(n)]  # 탈출 가능한 칸
 
+# 방향 매핑
+directions = {
+    'U': (-1, 0),
+    'D': (1, 0),
+    'L': (0, -1),
+    'R': (0, 1)
+}
 
-def dfs(x, y):
-    if x < 0 or x >= n or y < 0 or y >= m:
-        return 1
-    
-    if visited[x][y]:
-        if circle[x][y]:
-            return -1
-        else:
-            return 1
+def dfs(y, x):
+    if visited[y][x]:
+        return escape[y][x]
 
-    visited[x][y] = True
-    dx = dy = 0
-    match graph[x][y]:
-        case "D":
-            dx += 1
-        case "R":
-            dy += 1
-        case "U":
-            dx -= 1
-        case "L":
-            dy -= 1
+    visited[y][x] = True
+    dy, dx = directions[graph[y][x]]
+    ny, nx = y + dy, x + dx
 
-    r = dfs(x + dx, y + dy)
-    if r == -1:
-        circle[x][y] = True
+    if ny < 0 or ny >= n or nx < 0 or nx >= m:
+        escape[y][x] = True  # 밖으로 나감 → 탈출 가능
+    else:
+        escape[y][x] = dfs(ny, nx)  # 다음 칸 결과 재귀
 
-    return r
-
+    return escape[y][x]
 
 result = 0
 for i in range(n):
     for j in range(m):
-        d = dfs(i, j)
-        print(d)
-        result += d if d != -1 else 0
+        if dfs(i, j):
+            result += 1
 
 print(result)
