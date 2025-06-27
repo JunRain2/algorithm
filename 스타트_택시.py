@@ -30,7 +30,7 @@ for i in range(m):
 
 
 def calculate_distance_passengers(x, y):
-    visited = [[-1] * n for _ in range(n)]
+    visited = [[INF] * n for _ in range(n)]
     q = deque([(x, y)])
     visited[x][y] = 0
 
@@ -42,7 +42,7 @@ def calculate_distance_passengers(x, y):
                 0 <= nx < n
                 and 0 <= ny < n
                 and graph[nx][ny] == 0
-                and visited[nx][ny] == -1
+                and visited[nx][ny] == INF
             ):
                 visited[nx][ny] = visited[x][y] + 1
                 q.append((nx, ny))
@@ -53,7 +53,7 @@ def calculate_end(x, y, ex, ey):
     if (x, y) == (ex, ey):
         return 0
 
-    visited = [[-1] * n for _ in range(n)]
+    visited = [[INF] * n for _ in range(n)]
     q = deque([(x, y)])
     visited[x][y] = 0
 
@@ -65,7 +65,7 @@ def calculate_end(x, y, ex, ey):
                 0 <= nx < n
                 and 0 <= ny < n
                 and graph[nx][ny] == 0
-                and visited[nx][ny] == -1
+                and visited[nx][ny] == INF
             ):
                 visited[nx][ny] = visited[x][y] + 1
                 q.append((nx, ny))
