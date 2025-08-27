@@ -25,7 +25,7 @@ def solution(places):
                     if place[nx][ny] == "P" and dist + 1 <= 2:  # 거리두기 위반
                         return False
 
-                    if dist + 1 < 2:  # 거리가 2 미만이면 계속 탐색
+                    if dist + 1 < 2:  # 거리가 2 미만이면 계속 탐색, P가 겹치는 것을 걱정 -> 애초에 겹치면 끝임
                         visited[nx][ny] = True
                         q.append((nx, ny, dist + 1))
 
