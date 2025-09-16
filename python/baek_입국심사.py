@@ -1,26 +1,22 @@
-import heapq
-
 n, m = map(int, input().split())
-
 arr = [int(input()) for _ in range(n)]
 
-q = []
-for i in range(n):
-    # 입국심사대가 끝났을 때를 기준으로 문제를 풀이
-    # 종료 시간, 걸리는 시간
-    q.append((arr[i], arr[i]))
+left, right = 1, max(arr) * m
+answer = right
 
-result = 0
-for _ in range(m):
-    w, t = heapq.heappop(q)
+while left <= right:
+    mid = (left + right) // 2
+    people = 0
     
-    result = w
-    w += t
-    heapq.heappush(q, (w, t))
+    for t in arr:
+        people += mid // t
+        if people >= m:  # 이미 m명 이상이면 더 계산할 필요 없음
+            break
     
-    
-print(result)
+    if people >= m:  # mid 시간 안에 다 처리 가능 → 더 줄여본다
+        answer = mid
+        right = mid - 1
+    else:  # mid 시간으론 부족 → 시간을 늘린다
+        left = mid + 1
 
-"""
-M명의 사람을 N개의 입국심사대에서 처리
-"""
+print(answer)
