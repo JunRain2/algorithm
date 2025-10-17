@@ -4,45 +4,52 @@
 
 
 arr = list(map(int, input().split()))
+
+arr = arr[: len(arr) - 1]
 n = len(arr)
 
-arr = arr[:len(arr) - 1]
 
 # 힘의 크기가 다 다름
-    # 같은 지점 -> 1
-    # 중앙에서 이동 -> 2
-    # 인접(왼 -> 위 / 왼 -> 오) -> 3
-    # 반대(왼 -> 오 / 위 -> 아) -> 4
+# 같은 지점 -> 1
+# 중앙에서 이동 -> 2
+# 인접(왼 -> 위 / 왼 -> 오) -> 3
+# 반대(왼 -> 오 / 위 -> 아) -> 4
 def add_power(s, e):
     if s == e:
         return 1
     elif s == 0:
         return 2
-    elif (s + 1) % 5 == e or (s - 1) % 5 == e:
-        return 3
-    
-    return 4
+    elif abs(e - s) == 2:
+        return 4
+    return 3
+
 
 # 현재 위치 = min(현재 위치, 왼발 움직였을 때, 오른발 움직였을 때)
 INF = int(1e9)
-dp = [[INF, (0, 0)] * 2 for _ in range(n)]
+dp = [[[INF] * 5 for _ in range(5)] for _ in range(n + 1)]
+dp[0][0][0] = 0
 
-dp[0][0] = [0, (0, 0)]
-dp[0][1] = [0, (0, 0)]
+for i in range(n):
+    for left in range(5):
+        for right in range(5):
+            if dp[i][left][right] == INF:
+                continue
 
-for i in range(1, n):
-    # 이전에서 왼 발 움직였을 때
-    for j in range(2):
-        p, (x, y) = dp[i - 1][j]
-        if y == arr[i]:
-            continue
-        p += add_power(x, arr[i])
-        
-        if dp[i][0][0] < p:
-            dp[i][0] = 
-        
-    
-    # 이전에서 오른 발 움직였을 때
-    dp[i][1] = min(dp[i - 1][0], dp[i- 1][1])
-    
-print(min(dp[n- 1]))
+            if right != arr[i]:
+                dp[i + 1][arr[i]][right] = min(
+                    dp[i + 1][arr[i]][right],
+                    dp[i][left][right] + add_power(left, arr[i]),
+                )
+
+            if left != arr[i]:
+                dp[i + 1][left][arr[i]] = min(
+                    dp[i + 1][left][arr[i]],
+                    dp[i][left][right] + add_power(right, arr[i]),
+                )
+
+result = INF
+for left in range(5):
+    for right in range(5):
+        result = min(result, dp[n][left][right])
+
+print(result)
