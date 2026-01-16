@@ -21,16 +21,8 @@ def input_arr():
 def output_arr(arr):
     if arr == "error":
         return arr
-
-    result = "["
-
-    for i in range(len(arr)):
-        if i == len(arr) - 1:
-            result = result + f"{i}" + "]"
-        else:
-            result = result + f"{i},"
-
-    return result
+    
+    return "[" + ",".join(map(str, arr)) + "]"
 
 
 # 명령어에 맞춰 실행하는 메서드
