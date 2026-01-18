@@ -1,43 +1,34 @@
 def execute() -> int:
-    # 좌, 우 k만큼 떨어진 양동이까지 닿음
     n, k = map(int, input().split())
-    positions = input_positions(n)
-
-    # 엘버트가 택한 최적의 위치로부터 K만큼 떨어진 거리 내에 있는 얼음들의 합(최댓값)
-    return max_ice(k, positions)
-
-
-def input_positions(n):
-    d = dict()
-
+    
+    # 좌표별 얼음 양 저장
+    buckets = [0] * 1000001
+    max_pos = 0
+    
     for _ in range(n):
         g, x = map(int, input().split())
-        d[x] = g
-
-    return d
-
-
-def max_ice(k, positions):
-    arr = sum_ice(k, positions)
-
-    return max(arr)
-
-
-def sum_ice(k, positions):
-    max_key = max(positions.keys())
-    min_key = min(positions.keys())
-    arr = [0] * (max_key + 1)
-
-    for key in positions.keys():
-        value = positions[key]
-        arr[key] = arr[key] + value
-
-        for i in range(1, k + 1):
-            if (key - i) > min_key:
-                arr[key - i] = arr[key - i] + value
-            if (key + i) < max_key:
-                arr[key + i] = arr[key + i] + value
-
-    return arr
+        buckets[x] += g
+        max_pos = max(max_pos, x)
+    
+    # 윈도우 크기: 2*k + 1 (좌우 k씩)
+    window_size = 2 * k + 1
+    
+    # 초기 윈도우 합 계산
+    current_sum = sum(buckets[0:min(window_size, max_pos + 1)])
+    max_ice = current_sum
+    
+    # 슬라이딩 윈도우로 최댓값 찾기
+    for i in range(1, max_pos + 1):
+        # 왼쪽 끝 제거
+        if i - 1 - k >= 0:
+            current_sum -= buckets[i - 1 - k]
+        
+        # 오른쪽 끝 추가
+        if i + k <= max_pos:
+            current_sum += buckets[i + k]
+        
+        max_ice = max(max_ice, current_sum)
+    
+    return max_ice
 
 print(execute())
