@@ -2,49 +2,47 @@
 # UTF-8 encoding when using korean
 
 n = int(input())
-graph = [[] for _ in range(n + 1)]
 
+graph = [[] for _ in range(n + 1)]
 for _ in range(n):
 	a, b = map(int, input().split())
 	graph[a].append(b)
 	graph[b].append(a)
 
-path = []
+parent = list(range(n + 1))
 
-def dfs(graph, visited, v, prev):
-	visited[v] = True
+def dfs(v, prev, path):
+	parent[v] = prev
+	path.add(v)
 
 	for next in graph[v]:
 		if next == prev:
 			continue
 
-		if not visited[next]:
-			path.append(next)
-			
-			if dfs(graph, visited, next, v):
-				return True
-			
-			path.pop()
-		else: # Circle 발생 가능성 존재
-			if next in path: # Circle 발생
-				path.append(next)
-				return True
+		if parent[next] != next: # 이미 방문 -> Circle일 가능성 존재
+			if next in path: # 지나온 경로에 next 존재 -> Circle 확정 !!!
+				current = v
+				circle = []
+				while current != next:
+					circle.append(current)
+					current = parent[current]
 
-	return False
+				circle.append(next) # next를 맨 마지막에 추가
+				return circle
 
-visited = [False for _ in range(n + 1)]
+		circle = dfs(next, v, path)
+		if circle:
+			return circle
 
-for i in range(1, n + 1):
-	if not visited[i]:
-		path.append(i)
-		if dfs(graph, visited, i, -1):
+	return None
+
+
+circle = None
+for i in range(n):
+	if parent[i] == i:
+		circle = dfs(i, 0, set()) # set()은 매 그래프마다 초기화되기 때문에 remove를 따로 할 필요 없음
+		if circle:
 			break
-		path.pop()
 
-for i in range(len(path)):
-	if path[i] == path[-1]:
-		path = path[i:-1]
-		break
-
-print(len(path))
-print(*sorted(path))
+print(len(circle))
+print(*sorted(circle))
