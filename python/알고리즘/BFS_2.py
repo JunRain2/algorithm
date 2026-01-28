@@ -2,7 +2,7 @@ from collections import deque
 
 def bfs(graph, start, visited):
     # Queue 구현을 위해 deque 라이브러리를 활용
-    queue = deque([start])
+    queue = deque([start]) # Queue는 이미 방문한 값을 담고 있음
     # 현재 노드를 방문 처리
     visited[start] = True
     # 큐가 빌 때까지 반복
