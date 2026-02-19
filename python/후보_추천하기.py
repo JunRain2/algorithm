@@ -35,4 +35,4 @@ for p in arr:
     for k in list(photos.keys()):
         photos[k] = (photos[k][0], photos[k][1] -1)
 
-print(*list(sorted(list(photos.keys()))))
+print(*sorted(photos.keys()))
