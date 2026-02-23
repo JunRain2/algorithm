@@ -1,10 +1,7 @@
-from collections import defaultdict
-import heapq
-
 n = int(input())
 tops = list(map(int, input().split()))
 
-buildings = defaultdict(list)
+buildings = dict()
 
 # 정방향 순회, i 기준으로 왼쪽에 머가 보이는지 
 stack = []
@@ -18,9 +15,10 @@ for i in range(n):
     while stack and stack[-1][0] <= prev:
         stack.pop()
         
-    for _, idx in stack:
+    if stack:
         # 거리, 인덱스 번호
-        heapq.heappush(buildings[i],(abs(i - idx), idx + 1))
+        near = stack[-1][1]
+        buildings[i] = (near ,len(stack))
         
     stack.append((tops[i], i))
     
@@ -36,14 +34,20 @@ for i in range(n-1, -1, -1):
     while stack and stack[-1][0] <= prev:
         stack.pop()
     
-    for _, idx in stack:
+    if stack:
         # 거리, 인덱스 번호
-        heapq.heappush(buildings[i],(abs(i - idx), idx + 1))
-    
+        near = stack[-1][1]
+        if i not in buildings:
+            buildings[i] = (near ,len(stack))      
+        else: 
+            left_distance = abs(i - buildings[i][0])
+            right_distance = abs(i - near)
+            buildings[i]= (buildings[i][0] if left_distance <= right_distance else near, buildings[i][1] + len(stack))
+            
     stack.append((tops[i], i))
 
 for i in range(n):
-    if not buildings[i]:
+    if i not in buildings:
         print(0)
     else:
-        print(len(buildings[i]), heapq.heappop(buildings[i])[1])
+        print(buildings[i][1], buildings[i][0] + 1)
