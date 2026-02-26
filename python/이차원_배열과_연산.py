@@ -1,6 +1,5 @@
 from collections import Counter
 
-# r과 c는 1부터 시작함
 r, c, k = map(int, input().split())
 r -= 1
 c -= 1
@@ -11,57 +10,40 @@ def row_sort(graph):
     result = []
     for line in graph:
         counter = Counter(line)
-        count_list = sorted(counter.items(), key = lambda x: (x[1], x[0]))
+        counter.pop(0, None)  # 0은 빈 공간이므로 제외
+        count_list = sorted(counter.items(), key=lambda x: (x[1], x[0]))
         tmp = []
-        for k, v in count_list:
-            tmp.append(k)
-            tmp.append(v)
+        for num, cnt in count_list:
+            tmp.append(num)
+            tmp.append(cnt)
         result.append(tmp)
-    # 가장 긴 행 길이 찾기
+    for row in result:
+        del row[100:]
+    result = result[:100]
     max_len = max(len(row) for row in result)
-    # 짧은 행은 0으로 패딩
     for row in result:
         row += [0] * (max_len - len(row))
-
     return result
 
 
-def turn_left(graph):
+def transpose(graph):
     x = len(graph)
     y = len(graph[0])
+    return [[graph[i][j] for i in range(x)] for j in range(y)]
 
-    tmp = [[0] * x for _ in range(y)]
-    for i in range(x):
-        for j, v in enumerate(sorted(graph[i])):
-            tmp[j][i] = v
-
-    return tmp
-
-def turn_right(graph):
-    x = len(graph)
-    graph.reverse()
-
-    tmp = [[0] * x for _ in range(y)]
-    for i in range(x):
-        for j, v in enumerate(graph[i]):
-            tmp[j][i] = v
-
-    return tmp
 
 answer = -1
-for i in range(100):
+for i in range(101):
     x = len(a)
     y = len(a[0])
 
-    # (r, c)의 좌표의 값이 k일 경우 해당 초를 기록하고 종료
     if 0 <= r < x and 0 <= c < y and a[r][c] == k:
         answer = i
         break
 
-    if x >= y: # r연산을 실행
+    if x >= y:  # R 연산
         a = row_sort(a)
-    else: # c연산을 실행
-        a = turn_right(row_sort(turn_left(a)))
+    else:       # C 연산
+        a = transpose(row_sort(transpose(a)))
 
-        
 print(answer)
